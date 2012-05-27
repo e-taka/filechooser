@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript"
+    src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript"
+    src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css"
+    href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/base/jquery-ui.css">
+<script type="text/javascript" src="filechooser-classic.js"></script>
+<link rel="stylesheet" type="text/css" href="filechooser-classic.css">
+<script type="text/javascript">
+    $(function() {
+        $('#execute-file button').click(function() {
+            $('#execute-file input').fileChooser({
+                filters: ['*', ['*.exe', '*.bat', '*.sh']]
+            });
+        });
+        $('#work-directory button').click(function() {
+            $('#work-directory input').fileChooser({
+                selectableFile: false,
+                selectableDir: true
+            });
+        });
+    })
+</script>
+</head>
+<body>
+    <div id="main">
+        <form>
+            <div id="execute-file">
+                Executable file: <input type="text">
+                <button type="button">Choose</button>
+            </div>
+            <div id="work-directory">
+                Working Directory: <input type="text">
+                <button type="button">Choose</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

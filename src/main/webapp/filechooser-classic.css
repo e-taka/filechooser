@@ -1,0 +1,14 @@
+#filechooser-contents li {
+    list-style-type: none;
+    float: left;
+    margin: 0 10px;
+    margin-left: 32px;
+}
+
+#filechooser-contents li.d {
+    list-style-image: url(dir.png);
+    text-decoration: underline;
+}
+#filechooser-contents li.f {
+    list-style-image: url(generic.png);
+}

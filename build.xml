@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="file-chooser" xmlns:ivy="antlib:org.apache.ivy.ant">
+    <property name="target.dir" location="target"/>
+    <property name="target.jar.name" value="filechooser"/>
+    <property name="target.war.name" value="filechooser-example"/>
+    <property name="ivy.version" value="2.2.0"/>
+    <property name="tomcat.version" value="7.0.27"/>
+
+    <target name="start" depends="main.war, -tomcat"
+        description="Start an example of file-chooser on Tomcat.">
+        <delete dir="${tomcat.dir}/webapps/${target.war.name}"/>
+        <copy file="${target.dir}/${target.war.name}.war" todir="${tomcat.dir}/webapps"
+            overwrite="true"/>
+        <exec executable="${tomcat.dir}/bin/startup.sh"/>
+        <input>Press Enter key to STOP</input>
+        <exec executable="${tomcat.dir}/bin/shutdown.sh"/>
+    </target>
+
+    <target name="main.war" depends="-ivy.task, -main.jar"
+        description="Build a war file of file-chooser example.">
+        <ivy:retrieve pattern="${target.dir}/lib/[artifact]-[revision].[type]" conf="runtime"/>
+        <war destfile="${target.dir}/${target.war.name}.war"
+            webxml="src/main/webapp/WEB-INF/web.xml">
+            <lib dir="${target.dir}/lib">
+                <include name="*.jar"/>
+            </lib>
+            <fileset dir="src/main/webapp">
+                <include name="**/*"/>
+                <exclude name="WEB-INF/web.xml"/>
+            </fileset>
+        </war>
+        <delete dir="${target.dir}/lib"/>
+    </target>
+
+    <target name="-main.jar" depends="-main.classes">
+        <mkdir dir="${target.dir}/lib"/>
+        <jar destfile="${target.dir}/lib/${target.jar.name}.jar">
+            <fileset dir="${target.dir}/classes">
+                <include name="**/*" />
+            </fileset>
+        </jar>
+        <delete dir="${target.dir}/classes" />
+    </target>
+
+    <target name="-main.classes" depends="-ivy.task">
+        <mkdir dir="${target.dir}/classes" />
+        <ivy:cachepath pathid="main.classpath" conf="runtime,compile" />
+        <javac destdir="${target.dir}/classes" encoding="UTF-8"
+            includeantruntime="false">
+            <classpath refid="main.classpath" />
+            <src path="src/main/java" />
+        </javac>
+    </target>
+
+    <target name="-ivy.task" depends="-ivy.jar">
+        <taskdef resource="org/apache/ivy/ant/antlib.xml"
+                 uri="antlib:org.apache.ivy.ant">
+            <classpath>
+                <pathelement location="${ivy.filepath}"/>
+            </classpath>
+        </taskdef>
+    </target>
+
+    <target name="-ivy.jar" depends="-properties" unless="ivy.downloaded">
+        <mkdir dir="${target.dir}"/>
+        <get dest="${target.dir}"
+            src="http://archive.apache.org/dist/ant/ivy/${ivy.version}/apache-ivy-${ivy.version}-bin.zip"/>
+        <unzip dest="${target.dir}"
+            src="${target.dir}/apache-ivy-${ivy.version}-bin.zip">
+            <patternset>
+                <include name="**/*.jar"/>
+            </patternset>
+        </unzip>
+        <copy todir="${target.dir}">
+            <fileset dir="${target.dir}">
+                <include name="apache-ivy-*/*.jar"/>
+            </fileset>
+            <mapper type="flatten"/>
+        </copy>
+        <delete includeemptydirs="true">
+            <fileset dir="${target.dir}/apache-ivy-${ivy.version}"/>
+            <fileset dir="${target.dir}">
+                <include name="apache-ivy-${ivy.version}-bin.zip"/>
+            </fileset>
+        </delete>
+    </target>
+
+    <target name="-tomcat" depends="-properties" unless="tomcat.downloaded">
+        <mkdir dir="${target.dir}"/>
+        <get dest="${target.dir}"
+            src="http://ftp.riken.jp/net/apache/tomcat/tomcat-7/v${tomcat.version}/bin/apache-tomcat-${tomcat.version}.zip"/>
+        <unzip dest="${target.dir}"
+            src="${target.dir}/apache-tomcat-${tomcat.version}.zip"/>
+        <move file="${target.dir}/apache-tomcat-${tomcat.version}"
+            tofile="${tomcat.dir}"/>
+        <chmod dir="${tomcat.dir}/bin" includes="*.sh" perm="a+x"/>
+        <delete file="${target.dir}/apache-tomcat-${tomcat.version}.zip"/>
+    </target>
+
+    <target name="-properties">
+        <property name="ivy.filepath" location="${target.dir}/ivy-${ivy.version}.jar"/>
+        <available property="ivy.downloaded" file="${ivy.filepath}"/>
+        <property name="tomcat.dir" location="${target.dir}/apache-tomcat"/>
+        <available property="tomcat.downloaded" file="${tomcat.dir}/lib/catalina.jar"/>
+    </target>
+</project>
