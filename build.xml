@@ -1,19 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="file-chooser" xmlns:ivy="antlib:org.apache.ivy.ant">
-    <property name="target.dir" location="target"/>
-    <property name="target.jar.name" value="filechooser"/>
-    <property name="target.war.name" value="filechooser-example"/>
-    <property name="ivy.version" value="2.2.0"/>
-    <property name="tomcat.version" value="7.0.27"/>
+    <property file="build.properties"/>
 
-    <target name="start" depends="main.war, -tomcat"
+    <target name="start" depends="main.war, -tomcat, -start.war, -start.unix, -start.windows"
         description="Start an example of file-chooser on Tomcat.">
+    </target>
+
+    <target name="-start.war" depends="main.war, -tomcat">
         <delete dir="${tomcat.dir}/webapps/${target.war.name}"/>
         <copy file="${target.dir}/${target.war.name}.war" todir="${tomcat.dir}/webapps"
             overwrite="true"/>
+    </target>
+
+    <target name="-start.unix" depends="-start.os" if="os.unix">
         <exec executable="${tomcat.dir}/bin/startup.sh"/>
         <input>Press Enter key to STOP</input>
         <exec executable="${tomcat.dir}/bin/shutdown.sh"/>
+    </target>
+
+    <target name="-start.windows" depends="-start.os" if="os.windows">
+        <exec executable="${tomcat.dir}/bin/startup.bat"/>
+        <input>Press Enter key to STOP</input>
+        <exec executable="${tomcat.dir}/bin/shutdown.bat"/>
+    </target>
+
+    <target name="-start.os">
+        <condition property="os.unix">
+            <os family="unix"/>
+        </condition>
+        <condition property="os.windows">
+            <os family="windows"/>
+        </condition>
     </target>
 
     <target name="main.war" depends="-ivy.task, -main.jar"
