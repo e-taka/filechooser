@@ -62,11 +62,14 @@
 
         $('#dirs', dialog$).bind('change', function(event) {
             currentDir$ = $(':selected', this);
-            var path = currentDir$.val();
             var index = currentDir$.data('index');
-            $.get(settings.url + "list" + path, {
-                q : filter$.val()
-            }, function(response) {
+            var path = currentDir$.val();
+            var url = settings.url + 'list';
+            if (path.charAt(0) != '/') {
+                url = url + '/';
+            }
+            url = url + path;
+            $.get(url, {q : filter$.val()}, function(response) {
                 $('option', dialog$).filter(function() {
                     return $(this).data('index') > index;
                 }).remove();
