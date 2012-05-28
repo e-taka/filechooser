@@ -33,7 +33,7 @@
         </condition>
     </target>
 
-    <target name="main.war" depends="-ivy.task, -main.jar"
+    <target name="main.war" depends="-ivy.task, -main.jar, -proxy"
         description="Build a war file of file-chooser example.">
         <ivy:retrieve pattern="${target.dir}/lib/[artifact]-[revision].[type]" conf="runtime"/>
         <war destfile="${target.dir}/${target.war.name}.war"
@@ -59,7 +59,7 @@
         <delete dir="${target.dir}/classes" />
     </target>
 
-    <target name="-main.classes" depends="-ivy.task">
+    <target name="-main.classes" depends="-ivy.task, -proxy">
         <mkdir dir="${target.dir}/classes" />
         <ivy:cachepath pathid="main.classpath" conf="runtime,compile" />
         <javac destdir="${target.dir}/classes" encoding="UTF-8"
@@ -78,7 +78,7 @@
         </taskdef>
     </target>
 
-    <target name="-ivy.jar" depends="-properties" unless="ivy.downloaded">
+    <target name="-ivy.jar" depends="-properties, -proxy" unless="ivy.downloaded">
         <mkdir dir="${target.dir}"/>
         <get dest="${target.dir}"
             src="http://archive.apache.org/dist/ant/ivy/${ivy.version}/apache-ivy-${ivy.version}-bin.zip"/>
@@ -102,7 +102,7 @@
         </delete>
     </target>
 
-    <target name="-tomcat" depends="-properties" unless="tomcat.downloaded">
+    <target name="-tomcat" depends="-properties, -proxy" unless="tomcat.downloaded">
         <mkdir dir="${target.dir}"/>
         <get dest="${target.dir}"
             src="http://ftp.riken.jp/net/apache/tomcat/tomcat-7/v${tomcat.version}/bin/apache-tomcat-${tomcat.version}.zip"/>
@@ -119,5 +119,9 @@
         <available property="ivy.downloaded" file="${ivy.filepath}"/>
         <property name="tomcat.dir" location="${target.dir}/apache-tomcat"/>
         <available property="tomcat.downloaded" file="${tomcat.dir}/lib/catalina.jar"/>
+    </target>
+
+    <target name="-proxy" if="proxy.host">
+        <setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}"/>
     </target>
 </project>
