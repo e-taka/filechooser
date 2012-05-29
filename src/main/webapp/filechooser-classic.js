@@ -91,19 +91,20 @@
         function queryRoots() {
             dirs$.empty();
             $.get(settings.url + "roots", {}, function(roots) {
-                function createDirs(dirs) {
-                    return $.map(dirs, function(dir) {
-                        return $('<option>').val(networkPath(dir))
-                                            .text(serverPath(dir))
-                                            .data('index', 0);
-                    });
-                }
                 $.each(createDirs(roots), function(n, root) {
                     root.attr('selected', n == 0)
                         .appendTo(dirs$);
                 });
 
                 var textDir = dirname(networkPath(textfield$.val()));
+                if (textDir.length > 0) {
+                    addExtraDirs(textDir);
+                }
+
+                dirs$.change();
+            }, 'json');
+
+            function addExtraDirs(textDir) {
                 var basedir = '';
                 var insertable = $('option', dirs$).filter(function() {
                     var rootpath = $(this).val();
@@ -133,9 +134,15 @@
                            .insertBefore(insertable.first());
                     });
                 }
+            }
 
-                dirs$.change();
-            }, 'json');
+            function createDirs(dirs) {
+                return $.map(dirs, function(dir) {
+                    return $('<option>').val(networkPath(dir))
+                                        .text(serverPath(dir))
+                                        .data('index', 0);
+                });
+            }
         }
 
         function view_files(files) {
@@ -197,11 +204,12 @@
         dialog$.dialog('open');
 
         function concat(dir, name) {
-            if (dir == '/') {
-                return '/' + name;
-            } else {
-                return dir + '/' + name;
+            if (dir.length == 0) {
+                ;
+            } else if (dir.charAt(dir.length - 1) == '/') {
+                return dir + name;
             }
+            return dir + '/' + name;
         }
 
         function dirname(path) {
