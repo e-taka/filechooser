@@ -16,6 +16,7 @@ import javax.ws.rs.QueryParam;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 
 @Path("/ajax/filesystem")
 public class FileView {
@@ -48,7 +49,14 @@ public class FileView {
     public Collection<FileItem> list(
             @PathParam("path") final String path, @QueryParam("q") final String q) {
         List<FileItem> files = new LinkedList<FileItem>();
-        File p = new File("/" + path);
+
+        File p = null;
+        if (SystemUtils.IS_OS_WINDOWS) {
+            p = new File(path);
+        } else {
+            p = new File("/" + path);
+        }
+
         if (p.isDirectory()) {
             String pattern =
                 StringUtils.defaultString(StringUtils.trim(q), "*");
@@ -60,6 +68,7 @@ public class FileView {
             }
             Collections.sort(files);
         }
+
         return files;
     }
 
