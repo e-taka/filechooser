@@ -13,15 +13,15 @@
     </target>
 
     <target name="-start.unix" depends="-start.os" if="os.unix">
-        <exec executable="${tomcat.dir}/bin/startup.sh"/>
+        <exec executable="${tomcat.dir}/bin/startup.sh" dir="${tomcat.dir}"/>
         <input>Press Enter key to STOP</input>
-        <exec executable="${tomcat.dir}/bin/shutdown.sh"/>
+        <exec executable="${tomcat.dir}/bin/shutdown.sh" dir="${tomcat.dir}"/>
     </target>
 
     <target name="-start.windows" depends="-start.os" if="os.windows">
-        <exec executable="${tomcat.dir}/bin/startup.bat"/>
+        <exec executable="${tomcat.dir}/bin/startup.bat" dir="${tomcat.dir}"/>
         <input>Press Enter key to STOP</input>
-        <exec executable="${tomcat.dir}/bin/shutdown.bat"/>
+        <exec executable="${tomcat.dir}/bin/shutdown.bat" dir="${tomcat.dir}"/>
     </target>
 
     <target name="-start.os">
