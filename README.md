@@ -10,6 +10,6 @@
     proxy.host = &lt;Proxy Server Address&gt;
     proxy.port = &lt;Proxy Server Port&gt;
 
-以下のように Ant を実行すると、デモアプリが動作する。エラーが発生しなければ、ブラウザで http://localhost:8080/filechooser-example/index.html を開く。
+以下のように Ant を実行すると、デモアプリが動作する。エラーが発生しなければ、ブラウザで [http://localhost:8080/filechooser-example/index.html](http://localhost:8080/filechooser-example/index.html) を開く。
 
     % ant start
