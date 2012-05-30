@@ -96,9 +96,9 @@
                         .appendTo(dirs$);
                 });
 
-                var textDir = dirname(networkPath(textfield$.val()));
-                if (textDir.length > 0) {
-                    addExtraDirs(textDir);
+                var textPath = networkPath(textfield$.val());
+                if (textPath.length > 0) {
+                    addExtraDirs(dirname(textPath));
                 }
 
                 dirs$.change();
