@@ -52,9 +52,16 @@ public class FileView {
 
         File p = null;
         if (SystemUtils.IS_OS_WINDOWS) {
-            p = new File(path);
+            if (path.matches("[A-Za-z]:")) {
+                // 'C:' -> 'C:\'
+                p = new File(path + File.separator);
+            } else {
+                // 'C:/path/to' -> 'C:/path/to'
+                p = new File(path);
+            }
         } else {
-            p = new File("/" + path);
+            // 'path/to' -> '/path/to'
+            p = new File(File.separator + path);
         }
 
         if (p.isDirectory()) {
