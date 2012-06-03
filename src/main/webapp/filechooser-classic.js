@@ -45,20 +45,19 @@
                 function() {
                     textfield$.val(concat(
                             currentDir$.val(), $('#filename', dialog$).val()));
-                    close();
+                    dialog$.dialog('close');
                 });
         $('#cancel', dialog$).click(function() {
-            close();
+            dialog$.dialog('close');
         });
-        function close() {
+        dialog$.bind('dialogclose', function() {
             $('option', dialog$).filter(function() {
                 return $(this).data('index') > 0;
             }).remove();
             $('select', dialog$).unbind('change');
             $('button', dialog$).unbind('click');
             $('li', dialog$).unbind('click').unbind('dblclick');
-            dialog$.dialog('close');
-        }
+        });
 
         $('#dirs', dialog$).bind('change', function(event) {
             currentDir$ = $(':selected', this);
