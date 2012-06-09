@@ -16,10 +16,9 @@ import javax.ws.rs.QueryParam;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
 
 @Path("/ajax/filesystem")
-public class FileView {
+public abstract class FileView {
 
     @GET
     @Path("roots")
@@ -50,20 +49,7 @@ public class FileView {
             @PathParam("path") final String path, @QueryParam("q") final String q) {
         List<FileItem> files = new LinkedList<FileItem>();
 
-        File p = null;
-        if (SystemUtils.IS_OS_WINDOWS) {
-            if (path.matches("[A-Za-z]:")) {
-                // 'C:' -> 'C:\'
-                p = new File(path + File.separator);
-            } else {
-                // 'C:/path/to' -> 'C:/path/to'
-                p = new File(path);
-            }
-        } else {
-            // 'path/to' -> '/path/to'
-            p = new File(File.separator + path);
-        }
-
+        File p = getPath(path);
         if (p.isDirectory()) {
             String pattern =
                 StringUtils.defaultString(StringUtils.trim(q), "*");
@@ -78,6 +64,8 @@ public class FileView {
 
         return files;
     }
+
+    protected abstract File getPath(final String path);
 
     class FileItem implements Comparable<FileItem> {
         private final String _name;
