@@ -81,7 +81,7 @@
     <target name="-ivy.jar" depends="-properties, -proxy" unless="ivy.downloaded">
         <mkdir dir="${target.dir}"/>
         <get dest="${target.dir}"
-            src="http://archive.apache.org/dist/ant/ivy/${ivy.version}/apache-ivy-${ivy.version}-bin.zip"/>
+            src="${apache.site}/ant/ivy/${ivy.version}/apache-ivy-${ivy.version}-bin.zip"/>
         <unzip dest="${target.dir}"
             src="${target.dir}/apache-ivy-${ivy.version}-bin.zip">
             <patternset>
@@ -105,7 +105,7 @@
     <target name="-tomcat" depends="-properties, -proxy" unless="tomcat.downloaded">
         <mkdir dir="${target.dir}"/>
         <get dest="${target.dir}"
-            src="http://ftp.riken.jp/net/apache/tomcat/tomcat-7/v${tomcat.version}/bin/apache-tomcat-${tomcat.version}.zip"/>
+            src="${apache.site}/tomcat/tomcat-7/v${tomcat.version}/bin/apache-tomcat-${tomcat.version}.zip"/>
         <unzip dest="${target.dir}"
             src="${target.dir}/apache-tomcat-${tomcat.version}.zip"/>
         <move file="${target.dir}/apache-tomcat-${tomcat.version}"
