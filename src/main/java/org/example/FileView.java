@@ -11,6 +11,7 @@ import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import org.apache.commons.io.filefilter.FileFilterUtils;
@@ -45,6 +46,7 @@ public abstract class FileView {
 
     @GET
     @Path("list/{path:.*}")
+    @Produces("application/json")
     public Collection<FileItem> list(
             @PathParam("path") final String path, @QueryParam("q") final String q) {
         List<FileItem> files = new LinkedList<FileItem>();
@@ -67,7 +69,7 @@ public abstract class FileView {
 
     protected abstract File getPath(final String path);
 
-    class FileItem implements Comparable<FileItem> {
+    static class FileItem implements Comparable<FileItem> {
         private final String _name;
         private final String _type;
 

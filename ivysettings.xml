@@ -16,6 +16,7 @@
         <ibiblio name="java.net2" root="http://download.java.net/maven/2/" m2compatible="true"/>
         <ibiblio name="codehaus"  root="http://repository.codehaus.org/"   m2compatible="true"/>
         <ibiblio name="jboss.org" root="http://repository.jboss.org/nexus/content/groups/public" m2compatible="true" />
+        <ibiblio name="eclipse.org" root="http://repo1.maven.org/maven2/" m2compatible="true"/>
         <filesystem name="shared">
             <ivy pattern="${ivy.shared.default.root}/${ivy.shared.default.ivy.pattern}" />
             <artifact pattern="${ivy.shared.default.root}/${ivy.shared.default.artifact.pattern}" />
@@ -27,6 +28,7 @@
         <chain name="main" dual="true">
             <resolver ref="shared"/>
             <resolver ref="java.net2"/>
+            <resolver ref="eclipse.org"/>
             <resolver ref="codehaus"/>
             <resolver ref="jboss.org"/>
             <resolver ref="public"/>
@@ -34,6 +36,7 @@
         <chain name="default" returnFirst="true" checkmodified="false">
             <resolver ref="local"/>
             <resolver ref="java.net2"/>
+            <resolver ref="eclipse.org"/>
             <resolver ref="codehaus"/>
             <resolver ref="jboss.org"/>
             <resolver ref="main"/>
