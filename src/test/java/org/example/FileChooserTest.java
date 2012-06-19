@@ -10,9 +10,9 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
 
 import test.HttpServer;
+import test.WebDriverFactory;
 
 public class FileChooserTest {
     private static HttpServer _server = null;
@@ -30,7 +30,7 @@ public class FileChooserTest {
     private static WebDriver _driver = null;
     @BeforeClass
     public static void openBrowser() {
-        _driver = new FirefoxDriver();
+        _driver = WebDriverFactory.create();
     }
     @AfterClass
     public static void closeBrowser() {
