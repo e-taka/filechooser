@@ -237,6 +237,9 @@
             var names = path.substring(base.length).split('/');
             var i = 0;
             for (i = 0; i < names.length; i++) {
+            	if (names[i] == '') {
+            		continue;
+            	}
                 paths.push(base + names.slice(0, i + 1).join('/'));
             }
             return paths;

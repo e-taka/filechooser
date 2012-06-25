@@ -2,7 +2,7 @@ package org.example;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -15,6 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -24,12 +25,9 @@ public abstract class FileView {
     @GET
     @Path("roots")
     public List<String> roots() {
-        File[] roots = File.listRoots();
-        List<String> paths = new ArrayList<String>();
-        for (final File d : roots) {
-            paths.add(d.getPath());
-        }
-        return paths;
+        return Arrays.asList(new String[] {
+                System.getProperty("user.dir"),
+        });
     }
 
     @GET
@@ -53,12 +51,20 @@ public abstract class FileView {
 
         File p = getPath(path);
         if (p.isDirectory()) {
+            /*
+             * フィルタに一致するファイル、またはディレクトリを列挙する。
+             * ただし'.'で始まるファイルを除外する。
+             */
             String pattern =
                 StringUtils.defaultString(StringUtils.trim(q), "*");
-            FileFilter filter = FileFilterUtils.or(
+            IOFileFilter filter = FileFilterUtils.or(
                     new WildcardFileFilter(StringUtils.split(pattern, ';')),
                     FileFilterUtils.directoryFileFilter());
-            for (final File f : p.listFiles(filter)) {
+            filter = FileFilterUtils.and(
+                    filter,
+                    FileFilterUtils.notFileFilter(
+                            FileFilterUtils.prefixFileFilter(".")));
+            for (final File f : p.listFiles((FileFilter) filter)) {
                 files.add(new FileItem(f));
             }
             Collections.sort(files);
